@@ -4,7 +4,7 @@ The purpose of this repo is to be the start here guide and contain all of anythi
 # Important Links
 ✅ https://potlock.org/data-backlog | Github Backlog for anything data related on Potlock <- self served
 
-🗳️ htpps://potlock.org/request data | Request queries or any changes to data repo
+🗳️ https://potlock.org/request data | Request queries or any changes to data repo
 
 📄 https://potlock.org/data-docs | 📍 Start here for data contributors
 
