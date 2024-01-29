@@ -1,0 +1,30 @@
+---
+name: Enhancement
+about: Small improvement / enhancement (not a full feature request)
+title: "[\U0001F485\U0001F3FC ENHANCE]"
+labels: enhancement
+assignees: ''
+
+---
+
+# Title
+[Short and descriptive title of the enhancement]
+
+# Summary
+[Brief overview of the enhancement and why it is needed or desired]
+
+
+# Description
+[Detailed description of the enhancement, including how it would work and any design considerations]
+
+## Alternatives
+[Discussion of any alternative solutions that were considered and why the proposed solution is preferred]
+
+# Risks
+[Identification and mitigation of any potential risks associated with the enhancement]
+
+# Acceptance Criteria
+[List of criteria that must be met for the enhancement to be considered accepted]
+
+# Additional Information
+[Any other relevant information, such as links to related issues or pull requests]
