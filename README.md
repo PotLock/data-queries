@@ -14,3 +14,4 @@ The purpose of this repo is to be the start here guide and contain all of anythi
 - Yijie Queries on Flipside https://flipsidecrypto.xyz/wownorth/plotlock-plotlock-A36Irq
 - Pikespeak Donate Contract Dashboard https://pikespeak.ai/wallet-explorer/donate.potlock.near/graph  https://pikespeak.ai/wallet-explorer/donate.potlock.near/transfers
 - Creatives Pot https://pikespeak.ai/wallet-explorer/creatives.v1.potfactory.potlock.near/global
+- Potlock Pot Information https://flipsidecrypto.xyz/Lordking/potlock-UD3Flm
