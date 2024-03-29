@@ -15,3 +15,4 @@ The purpose of this repo is to be the start here guide and contain all of anythi
 - Pikespeak Donate Contract Dashboard https://pikespeak.ai/wallet-explorer/donate.potlock.near/graph  https://pikespeak.ai/wallet-explorer/donate.potlock.near/transfers
 - Creatives Pot https://pikespeak.ai/wallet-explorer/creatives.v1.potfactory.potlock.near/global
 - Potlock Pot Information https://flipsidecrypto.xyz/Lordking/potlock-UD3Flm
+- Potlock Pot Round Analysis Lordking https://flipsidecrypto.xyz/Lordking/potlock-public-round-analysis-in-details-pYaf_O
