@@ -16,3 +16,9 @@ The purpose of this repo is to be the start here guide and contain all of anythi
 - Creatives Pot https://pikespeak.ai/wallet-explorer/creatives.v1.potfactory.potlock.near/global
 - Potlock Pot Information https://flipsidecrypto.xyz/Lordking/potlock-UD3Flm
 - Potlock Pot Round Analysis Lordking https://flipsidecrypto.xyz/Lordking/potlock-public-round-analysis-in-details-pYaf_O
+
+
+### Extra Resources
+- Katerina Recurrinng Donors https://flipsidecrypto.xyz/klaw/q/8EVU2RODUT2F/recurring-donors
+- Katerina Whether Donors are Following Projects https://flipsidecrypto.xyz/klaw/q/sTm5kczFoNh9/whether-donors-are-following-projects
+- Susana, Nadabot Stats & Affected by Human Score Page
