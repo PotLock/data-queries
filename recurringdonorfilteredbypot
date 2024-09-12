@@ -1,0 +1,104 @@
+-- forked from Lordking / POT donation - Total ✔️ @ https://flipsidecrypto.xyz/Lordking/q/OkIw_EjhUDY7/pot-donation---total
+---------------------------------------------------------------------
+-- L1 fail_receipts 👉 cd1b6803-297b-4bcb-9a88-b92f2a083e75
+
+WITH raw_pot AS (
+    SELECT livequery.live.udf_api(
+        'GET',
+        'https://api.flipsidecrypto.com/api/v2/queries/cd1b6803-297b-4bcb-9a88-b92f2a083e75/data/latest',
+        {'accept': 'application/json'}, {}) AS response
+),
+raw_data_pot AS (
+    SELECT VALUE:"TX_HASH" AS "TX_HASH" 
+    FROM raw_pot, LATERAL FLATTEN (input => response:data)
+),
+raw_donor AS (
+    SELECT livequery.live.udf_api(
+        'GET',
+        'https://api.flipsidecrypto.com/api/v2/queries/6ad607ae-b012-4d30-814e-42f53dafe273/data/latest',
+        {'accept': 'application/json'}, {}) AS response
+),
+raw_donor_build AS (
+    SELECT VALUE:"Donor" AS "Donor" 
+    FROM raw_donor, LATERAL FLATTEN (input => response:data)
+),
+pot_donation AS (
+    SELECT DISTINCT
+        call.SIGNER_ID AS "Donor",
+        call.DEPOSIT/1e24 AS "Amount (near)",
+        call.ARGS:project_id AS "Project",
+        call.BLOCK_TIMESTAMP AS "Time",
+        call.RECEIVER_ID AS "POT",
+        call.TX_HASH AS "Transaction",
+        call.ARGS:bypass_protocol_fee AS "bypass_protocol_fee",
+        call.ARGS:message AS "message",
+        ROUND(call.DEPOSIT/POW(10,24) * (
+            SELECT AVG(PRICE_USD) 
+            FROM near.price.fact_prices 
+            WHERE DATE_TRUNC('minute', TIMESTAMP) = (
+                SELECT MAX(DATE_TRUNC('minute', TIMESTAMP)) 
+                FROM near.price.fact_prices
+            ) 
+            AND SYMBOL = 'wNEAR'
+        )) AS "current_usd"
+    FROM near.core.fact_actions_events_function_call call 
+    WHERE RECEIPT_SUCCEEDED = 'TRUE'
+        AND ACTION_NAME = 'FunctionCall'
+        AND METHOD_NAME = 'donate'
+        AND call.RECEIVER_ID ILIKE '%potfactory.potlock.near%'
+        AND "Project" IS NOT NULL
+        AND call.TX_HASH NOT IN (SELECT DISTINCT TX_HASH FROM raw_data_pot)
+        AND SIGNER_ID IN (SELECT DISTINCT "Donor" FROM raw_donor_build)
+),
+pot AS (
+    SELECT 
+        "Donor",
+        "Time",
+        SUM("Amount (near)") AS "Donated (near)",
+        COUNT(DISTINCT "Project") AS "Projects",
+        SPLIT(MIN("Time"),' ')[0] AS "First donation (Public round)",
+        SPLIT(MIN("Time"),' ')[0] AS "Last donation (Public round)",
+        COUNT(DISTINCT "POT") AS "POTs",
+        COUNT(DISTINCT "Transaction") AS "Donation (transactions)",
+        COUNT("message") AS "Message",
+        SUM("current_usd") AS "Current USD"
+    FROM pot_donation
+    GROUP BY 1, 2
+),
+first_donation AS (
+    SELECT DISTINCT
+        "Donor",
+        FIRST_VALUE("Time") OVER (PARTITION BY "Donor", DATE("Time") ORDER BY "Time") AS first_donation_date, 
+        "Donated (near)" AS first_amount_donated
+    FROM pot
+),
+last_donation AS (
+    SELECT DISTINCT
+        "Donor", 
+        LAST_VALUE("Time") OVER (PARTITION BY "Donor", DATE("Time") ORDER BY "Time") AS last_donation_date, 
+        "Donated (near)" AS last_amount_donated
+    FROM pot
+)
+SELECT  
+    "Donor", 
+    first_donation_date, 
+    first_amount_donated, 
+    last_donation_date,
+    last_amount_donated,
+    CASE 
+        WHEN last_donation_date >= CURRENT_DATE - INTERVAL '14 days' THEN 'Yes' 
+        ELSE 'No' 
+    END AS actively_donating
+FROM (
+    SELECT 
+        fd."Donor",
+        fd.first_donation_date, 
+        fd.first_amount_donated, 
+        ld.last_donation_date,
+        ld.last_amount_donated,
+        ROW_NUMBER() OVER (PARTITION BY fd."Donor" ORDER BY ld.last_donation_date DESC) AS rn
+    FROM first_donation fd
+    JOIN last_donation ld ON fd."Donor" = ld."Donor"
+) sub
+WHERE rn = 1
+AND first_donation_date != last_donation_date;
